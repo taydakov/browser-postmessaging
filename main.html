@@ -3,10 +3,17 @@
 		<title>postMessage experiment</title>
 	</head>
 	<body>
-		<h1>Sending message to iframe using postMessage...</h1>
+		<h1>Want to access inner html of the iframe?</h1>
+		<button onclick="start()">Start (output to console)</button><br>
+		<!-- The iframe is from the same origin now.
+			 Host this file from the different origin to test Same-Origin Policy -->
 		<iframe src="iframe.html"></iframe>
 		<script>
-			console.log(document.querySelector('iframe'));
+			function start() {
+				var iframe = document.querySelector('iframe');
+				console.log(iframe);
+				console.log(iframe.contentDocument);
+			}
 		</script>
 	</body>
 </html>
