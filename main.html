@@ -3,13 +3,16 @@
 		<title>postMessage experiment</title>
 	</head>
 	<body>
-		<h1>Want to access inner html of the iframe?</h1>
-		<button onclick="start()">Start (output to console)</button><br>
+		<h1>Want to access a child document?</h1>
+		<button onclick="openiniframe()">Open iframe in an iframe window</button><br>
+		<button onclick="openinwindow()">Open iframe in a separate window</button><br>
+		<button onclick="send()">Send message to child window</button><br>
 		<!-- The iframe is from the same origin now.
 			 Host this file from the different origin to test Same-Origin Policy -->
-		<iframe src="http://localhost:8081/iframe.html"></iframe>
+		<iframe></iframe>
 		<script>
-			var iframe;
+			var childURL = "http://localhost:8081/child.html";
+			var childWindow;
 
 			function log() {
 				var context = '[main.html]';
@@ -22,14 +25,22 @@
 				log('message received: ', event);
 			}, false);
 
-			function start() {
-				iframe = document.querySelector('iframe');
+			function openiniframe() {
+				var iframe = document.querySelector('iframe');
+				iframe.src = childURL;
 				log('iframe object: ', iframe);
 				try {
 					log('iframe document: ', iframe.contentDocument);
 				} catch(err) {};
+				childWindow = iframe.contentWindow;
+			}
 
-				iframe.contentWindow.postMessage('test message from parent', '*');
+			function openinwindow() {
+				childWindow = window.open(childURL);
+			}
+
+			function send() {
+				childWindow.postMessage('test message from parent', '*');
 				log('test message has been sent');
 			}
 		</script>

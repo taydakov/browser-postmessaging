@@ -1,25 +1,28 @@
 <html>
 	<head>
-		<title>content of a embeddable iframe</title>
+		<title>content of a child document</title>
 	</head>
 	<body>
-		<h2>This is embeddable iframe</h2>
+		<h2>This is child document</h2>
 		<script>
+			var parentWindow = window.opener || window.top;
+
 			function log() {
-				var context = '[iframe.html]';
+				var context = '[child.html]';
 				// Converts arguments object to array for further concatenation
 				var argArray = Array.prototype.slice.call(arguments);
 				console.log.apply(console, [context + ' '].concat(argArray));
 			}
 
 			try {
-				log('parent document', parent.document);
+				log('parent window: ', parentWindow);
+				log('parent document: ', parentWindow.document);
 			} catch(err) {};
 
 			window.addEventListener('message', function (event) {
 				log('message received: ', event);
 
-				parent.window.postMessage('test response from iframe', '*');
+				parentWindow.postMessage('test response from the child', '*');
 				log('test response has been sent');
 			}, false);			
 		</script>
