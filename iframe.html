@@ -5,7 +5,23 @@
 	<body>
 		<h2>This is embeddable iframe</h2>
 		<script>
-			console.log(parent.document);
+			function log() {
+				var context = '[iframe.html]';
+				// Converts arguments object to array for further concatenation
+				var argArray = Array.prototype.slice.call(arguments);
+				console.log.apply(console, [context + ' '].concat(argArray));
+			}
+
+			try {
+				log('parent document', parent.document);
+			} catch(err) {};
+
+			window.addEventListener('message', function (event) {
+				log('message received: ', event);
+
+				parent.window.postMessage('test response from iframe', '*');
+				log('test response has been sent');
+			}, false);			
 		</script>
 	</body>
 </html>

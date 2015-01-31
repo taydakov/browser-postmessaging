@@ -7,12 +7,30 @@
 		<button onclick="start()">Start (output to console)</button><br>
 		<!-- The iframe is from the same origin now.
 			 Host this file from the different origin to test Same-Origin Policy -->
-		<iframe src="iframe.html"></iframe>
+		<iframe src="http://localhost:8081/iframe.html"></iframe>
 		<script>
+			var iframe;
+
+			function log() {
+				var context = '[main.html]';
+				// Converts arguments object to array for further concatenation
+				var argArray = Array.prototype.slice.call(arguments);
+				console.log.apply(console, [context + ' '].concat(argArray));
+			}
+
+			window.addEventListener('message', function (event) {
+				log('message received: ', event);
+			}, false);
+
 			function start() {
-				var iframe = document.querySelector('iframe');
-				console.log(iframe);
-				console.log(iframe.contentDocument);
+				iframe = document.querySelector('iframe');
+				log('iframe object: ', iframe);
+				try {
+					log('iframe document: ', iframe.contentDocument);
+				} catch(err) {};
+
+				iframe.contentWindow.postMessage('test message from parent', '*');
+				log('test message has been sent');
 			}
 		</script>
 	</body>
